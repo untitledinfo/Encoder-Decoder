@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Made by GGLeafx Encoder Decoder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      text-align: center;
+      width: 400px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    button {
+      background: #ff7eb3;
+      border: none;
+      padding: 12px 20px;
+      margin: 5px;
+      border-radius: 10px;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #ff4e91;
+      transform: scale(1.05);
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      background: rgba(0,0,0,0.3);
+      padding: 15px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>hidden umar and me Encoder/Decoder</h2>
+    <input id="text" placeholder="Enter text or numbers">
+    <br>
+    <button onclick="encode()">Encode</button>
+    <button onclick="decode()">Decode</button>
+    <p id="result">Result will appear here</p>
+  </div>
+
+  <script>
+    function encode() {
+      let input = document.getElementById("text").value.toUpperCase();
+      let encoded = input.split("").map(c => {
+        if (c >= "A" && c <= "Z") return c.charCodeAt(0) - 64;
+        else if (c === " ") return "/"; // space -> slash
+        return c;
+      }).join(",");
+      document.getElementById("result").innerText = encoded;
+    }
+    
+    function decode() {
+      let input = document.getElementById("text").value.replace(/,/g," ").split(/\s+/);
+      let decoded = input.map(n => {
+        if (n === "/") return " "; // slash -> space
+        let num = parseInt(n);
+        if (num >= 1 && num <= 26) return String.fromCharCode(num + 64);
+        return "";
+      }).join("");
+      document.getElementById("result").innerText = decoded;
+    }
+  </script>
+</body>
+</html>
