@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Made by GGLeafx Encoder Decoder</title>
+  <title>Made by Umar and Abdul salam Encoder Decoder</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -21,7 +21,7 @@
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
       text-align: center;
-      width: 400px;
+      width: 450px;
     }
 
     h2 {
@@ -63,39 +63,70 @@
       background: rgba(0,0,0,0.3);
       padding: 15px;
       border-radius: 10px;
+      word-wrap: break-word;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>hidden umar and me Encoder/Decoder</h2>
+    <h2>Custom Encoder / Decoder</h2>
     <input id="text" placeholder="Enter text or numbers">
     <br>
     <button onclick="encode()">Encode</button>
     <button onclick="decode()">Decode</button>
+    <button onclick="copyResult()">Copy Result</button>
     <p id="result">Result will appear here</p>
   </div>
 
   <script>
+    // A=1 ... Z=26
+    function letterToNumber(letter) {
+      return letter.charCodeAt(0) - 64;
+    }
+
+    function numberToLetter(num) {
+      return String.fromCharCode(num + 64);
+    }
+
     function encode() {
       let input = document.getElementById("text").value.toUpperCase();
       let encoded = input.split("").map(c => {
-        if (c >= "A" && c <= "Z") return c.charCodeAt(0) - 64;
-        else if (c === " ") return "/"; // space -> slash
+        if (c >= "A" && c <= "Z") return letterToNumber(c);  // A-Z → 1-26
+        if (c >= "0" && c <= "9") {                          // 0-9 → A-J
+          if (c === "0") return "J";
+          return numberToLetter(parseInt(c));
+        }
+        if (c === " ") return "_";                           // space → _
         return c;
       }).join(",");
       document.getElementById("result").innerText = encoded;
     }
-    
+
     function decode() {
-      let input = document.getElementById("text").value.replace(/,/g," ").split(/\s+/);
-      let decoded = input.map(n => {
-        if (n === "/") return " "; // slash -> space
-        let num = parseInt(n);
-        if (num >= 1 && num <= 26) return String.fromCharCode(num + 64);
-        return "";
+      let input = document.getElementById("text").value.split(",");
+      let decoded = input.map(token => {
+        if (token === "_") return " ";                       // _ → space
+        if (!isNaN(token) && token !== "") {                 // numbers → A-Z
+          let num = parseInt(token);
+          if (num >= 1 && num <= 26) return numberToLetter(num);
+        }
+        if (/^[A-J]$/.test(token)) {                         // digits → letters
+          if (token === "J") return "0";
+          return "123456789"[token.charCodeAt(0) - 65];
+        }
+        return token;
       }).join("");
       document.getElementById("result").innerText = decoded;
+    }
+
+    function copyResult() {
+      let resultText = document.getElementById("result").innerText;
+      if (resultText.trim() !== "") {
+        navigator.clipboard.writeText(resultText);
+        alert("Copied: " + resultText);
+      } else {
+        alert("No result to copy!");
+      }
     }
   </script>
 </body>
